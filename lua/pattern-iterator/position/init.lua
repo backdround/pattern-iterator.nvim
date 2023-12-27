@@ -1,5 +1,11 @@
 local utils = require(... .. ".utils")
 
+---Represents a position.
+---@class PI_Position
+---@field line number line
+---@field column number virtual column
+---@field n_is_pointable boolean position can point to a \n
+
 -- The variable must be file local in order to '__eq' work properly.
 -- lua 5.1 checks getmetatable(p1) == getmetatable(p2) before performing the
 -- real check.
@@ -25,12 +31,11 @@ local position_metatable = {
   end
 }
 
----@param line number virtual line
+---@param line number line
 ---@param column number virtual column
 ---@param n_is_pointable boolean position can point to a \n
 ---@return PI_Position
 local new_position = function(line, column, n_is_pointable)
-  ---Represents possible cursor position.
   ---@class PI_Position
   local p = {
     line = line,

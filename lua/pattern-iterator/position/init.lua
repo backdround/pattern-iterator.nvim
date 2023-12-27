@@ -127,6 +127,10 @@ local M = {}
 ---@param n_is_pointable boolean position can point to a \n
 ---@return PI_Position
 M.from_cursor = function(n_is_pointable)
+  if n_is_pointable == nil then
+    n_is_pointable = false
+  end
+
   local byte_position = vim.api.nvim_win_get_cursor(0)
   local position = utils.from_byte_to_virtual(byte_position)
   position = utils.place_in_bounds(position, n_is_pointable)
@@ -136,8 +140,16 @@ end
 ---Creates PI_Position from the given virtual position.
 ---@param line number virtual line
 ---@param column number virtual column
----@param n_is_pointable boolean position can point to a \n
+---@param n_is_pointable? boolean position can point to a \n
 M.from_coordinates = function(line, column, n_is_pointable)
+  if n_is_pointable == nil then
+    n_is_pointable = false
+  end
+
+  if type(line) ~= "number" or type(column) ~= "number" then
+    error("Line and column must be numbers")
+  end
+
   local coordinates = utils.place_in_bounds({ line, column }, n_is_pointable)
   return new_position(coordinates[1], coordinates[2], n_is_pointable)
 end

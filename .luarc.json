@@ -9,7 +9,7 @@
         "assert.are",
         "assert.cursor_at",
         "assert.buffer",
-        "assert.last_selected_region",
+        "assert.selected_region",
         "assert.pattern_position"
       ]
     },

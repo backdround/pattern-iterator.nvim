@@ -47,7 +47,7 @@ globals:
   assert.buffer:
     args:
       - type: string
-  assert.last_selected_region:
+  assert.selected_region:
     args:
       - type: table
       - type: table

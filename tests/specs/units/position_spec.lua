@@ -204,6 +204,21 @@ describe("position", function()
         assert.selected_region({ 1, 3 }, { 2, 4 })
       end)
 
+      it("with 'selection' == 'exclusive'", function()
+        vim.go.selection = "exclusive"
+
+        local p1 = position.from_coordinates(1, 3, false)
+        local p2 = position.from_coordinates(2, 2, false)
+        p1.select_region_to(p2)
+
+        h.feedkeys("d", true)
+
+        assert.buffer([[
+          somds
+          here
+        ]])
+      end)
+
       describe("in operator-pending mode after", function()
         local delete_through_keymap_to = function(line, column)
           h.trigger_delete()

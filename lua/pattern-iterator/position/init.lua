@@ -6,6 +6,8 @@ local utils = require(... .. ".utils")
 ---@field column number virtual column
 ---@field n_is_pointable boolean position can point to a \n
 
+local M = {}
+
 -- The variable must be file local in order to '__eq' work properly.
 -- lua 5.1 checks getmetatable(p1) == getmetatable(p2) before performing the
 -- real check.
@@ -54,10 +56,22 @@ local new_position = function(line, column, n_is_pointable)
   ---Selects a region from the current position to a given position.
   ---@param position PI_Position
   p.select_region_to = function(position)
+    local p1 = M.copy(p)
+    local p2 = M.copy(position)
+
+    if p1 > p2 then
+      p1, p2 = p2, p1
+    end
+
+    local selection = vim.api.nvim_get_option_value("selection", {})
+    if selection == "exclusive" then
+      p2.move(1)
+    end
+
     -- Use vim.fn.setcharpos instead vim.api.nvim_buf_set_mark, because the
     -- later ignores subsequent <bs>'s.
-    vim.fn.setcharpos("'<", { 0, p.line, p.column + 1, 0 })
-    vim.fn.setcharpos("'>", { 0, position.line, position.column + 1, 0 })
+    vim.fn.setcharpos("'<", { 0, p1.line, p1.column + 1, 0 })
+    vim.fn.setcharpos("'>", { 0, p2.line, p2.column + 1, 0 })
 
     vim.api.nvim_feedkeys("gv", "nx", false)
 
@@ -132,8 +146,6 @@ local new_position = function(line, column, n_is_pointable)
 
   return p
 end
-
-local M = {}
 
 ---Creates PI_Position from the position of the current cursor.
 ---@param n_is_pointable boolean position can point to a \n

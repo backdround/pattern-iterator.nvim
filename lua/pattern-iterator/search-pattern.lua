@@ -8,12 +8,11 @@ local position = require(({ ... })[1]:gsub("[^.]+$", "") .. "position")
 ---Vim search wrapper
 ---@param pattern string
 ---@param flags string
----@param n_is_pointable boolean position can point to a \n
 ---@return PI_Position?
-local vim_search = function(pattern, flags, n_is_pointable)
+local vim_search = function(pattern, flags)
   local found_position = nil
   vim.fn.search(pattern, flags, nil, nil, function()
-    found_position = position.from_cursor(n_is_pointable)
+    found_position = position.from_cursor(true)
   end)
 
   return found_position
@@ -26,7 +25,7 @@ end
 local search_current = function(pattern, relative_position)
   relative_position.set_cursor()
 
-  local start_pattern_position = vim_search(pattern, "bcWn", true)
+  local start_pattern_position = vim_search(pattern, "bcWn")
   if start_pattern_position == nil then
     return nil
   end
@@ -34,11 +33,11 @@ local search_current = function(pattern, relative_position)
   start_pattern_position.set_cursor()
 
   -- Searches the end if the cursor is palced at "$"
-  local end_pattern_position = vim_search(pattern, "becWn", true)
+  local end_pattern_position = vim_search(pattern, "becWn")
 
   if start_pattern_position ~= end_pattern_position then
     -- Searches the end in all other cases barring "$"
-    end_pattern_position = vim_search(pattern, "ecWn", true)
+    end_pattern_position = vim_search(pattern, "ecWn")
   end
 
   -- Check that the relative_position is in bounds of the found pattern
@@ -81,12 +80,13 @@ local M = {}
 
 ---Searches the pattern that is around the relative_position
 ---@param pattern string
----@param from PI_Position
+---@param relative_position PI_Position
 ---@return PI_PatternPosition?
-M.current = function(pattern, from)
+M.current = function(pattern, relative_position)
+
   local restore_vim_state = prepare_vim_state()
 
-  local result = { search_current(pattern, from) }
+  local result = { search_current(pattern, relative_position) }
 
   restore_vim_state()
   return unpack(result)

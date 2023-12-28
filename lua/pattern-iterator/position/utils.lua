@@ -41,7 +41,7 @@ M.from_byte_to_virtual = function(byte_position)
 end
 
 ---Places the given position in bound of the current buffer.
----@param position number[]
+---@param position number[] virtual position.
 ---@param n_is_pointable boolean position can point to a "\n"
 ---@return number[]
 M.place_in_bounds = function(position, n_is_pointable)

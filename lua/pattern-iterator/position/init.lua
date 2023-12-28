@@ -66,6 +66,18 @@ local new_position = function(line, column, n_is_pointable)
     end
   end
 
+  ---Sets new n_is_pointable
+  ---@param new_n_is_pointable boolean
+  p.set_n_is_pointable = function(new_n_is_pointable)
+    local line_length = utils.virtual_line_length(p.line, new_n_is_pointable)
+    if new_n_is_pointable == false and p.column == line_length then
+      -- Correct column
+      p.column = math.max(1, line_length - 1)
+    end
+
+    p.n_is_pointable = new_n_is_pointable
+  end
+
   local move_forward = function(offset)
     local last_line = vim.api.nvim_buf_line_count(0)
     while true do

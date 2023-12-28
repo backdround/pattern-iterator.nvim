@@ -174,6 +174,21 @@ describe("position", function()
   end)
 
   describe("act", function()
+    it("set_n_is_pointable", function()
+      local p = position.from_coordinates(2, 5, true)
+      assert.are.same({ 2, 5 }, { p.line, p.column })
+
+      p.set_n_is_pointable(false)
+      assert.are.same({ 2, 4 }, { p.line, p.column })
+
+      p.move(1)
+      assert.are.same({ 3, 0 }, { p.line, p.column })
+
+      p.set_n_is_pointable(true)
+      p.move(-1)
+      assert.are.same({ 2, 5 }, { p.line, p.column })
+    end)
+
     describe("select_region_to", function()
       it("forward", function()
         local p1 = position.from_coordinates(1, 3, false)

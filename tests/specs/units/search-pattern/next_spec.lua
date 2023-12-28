@@ -20,6 +20,15 @@ describe("search-pattern.next", function()
     assert.is.Nil(pattern_position)
   end)
 
+  it("the cursor shouldn't change the position", function()
+    h.get_preset("<b> <b> <b>")()
+
+    local from_position = position.from_coordinates(1, 4)
+    search_pattern.next("<b>", from_position)
+
+    assert.cursor_at(1, 0)
+  end)
+
   describe("simple pattern", function()
     before_each(h.get_preset("<a> <a> <a>"))
     local pattern = "\\M<a>"

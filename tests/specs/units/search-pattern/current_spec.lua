@@ -31,7 +31,7 @@ describe("search-pattern.current", function()
       assert.is.Nil(pattern_position)
     end)
 
-    it("the cursor shouldn't change position", function()
+    it("the cursor shouldn't change the position", function()
       local from_position = position.from_coordinates(1, 4)
       search_pattern.current(pattern, from_position)
 

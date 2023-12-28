@@ -18,7 +18,7 @@ local vim_search = function(pattern, flags)
   return found_position
 end
 
----Searches the pattern that is around the relative_position
+---Searches a pattern match that is around the relative_position.
 ---@param pattern string
 ---@param relative_position PI_Position
 ---@return PI_PatternPosition?
@@ -54,7 +54,8 @@ local search_current = function(pattern, relative_position)
   }
 end
 
----Searches the pattern from the given position. from_position is exclusive.
+---Searches a next pattern match from the given position.
+---relative_position is exclusive.
 ---@param pattern string
 ---@param relative_position PI_Position
 ---@return PI_PatternPosition?
@@ -89,8 +90,7 @@ local search_next = function(pattern, relative_position)
   }
 end
 
-
----Sets vim state for searching
+---Sets vim state for searching.
 ---@return function It restores the initial vim state.
 local prepare_vim_state = function()
   -- Save the current state
@@ -114,7 +114,7 @@ end
 
 local M = {}
 
----Searches the pattern that is around the relative_position
+---Searches a pattern match that is around the relative_position.
 ---@param pattern string
 ---@param relative_position PI_Position
 ---@return PI_PatternPosition?
@@ -127,7 +127,8 @@ M.current = function(pattern, relative_position)
   return unpack(result)
 end
 
----Searches the pattern from the given position. from_position is exclusive.
+---Searches a next pattern match from the given position.
+---relative_position is exclusive.
 ---@param pattern string
 ---@param relative_position PI_Position
 ---@return PI_PatternPosition?

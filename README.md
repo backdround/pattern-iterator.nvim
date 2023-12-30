@@ -64,9 +64,9 @@ local pattern_iterator = require("your-plugin-name.pattern-iterator")
 ### Module
 Function | Return type | Description
 -- | -- | --
-new_around(pattern,options) | PI_Iterator? | Creates an iterator that points to a current match at the given position or the cursor. Returns nil if there is no pattern at the position.
-new_forward(pattern,options) | PI_Iterator? | Creates an iterator that points to a match after the given position or the cursor. Returns nil if there is no pattern after the position.
-new_backward(pattern,options) | PI_Iterator? | Creates an iterator that points to a match before the given position or the cursor. Returns nil if there is no pattern before the position.
+new_around(pattern,options?) | PI_Iterator? | Creates an iterator that points to a current match at the given position or the cursor. Returns nil if there is no pattern at the position.
+new_forward(pattern,options?) | PI_Iterator? | Creates an iterator that points to a match after the given position or the cursor. Returns nil if there is no pattern after the position.
+new_backward(pattern,options?) | PI_Iterator? | Creates an iterator that points to a match before the given position or the cursor. Returns nil if there is no pattern before the position.
 
 ```lua
 local options = {
@@ -82,8 +82,8 @@ local options = {
 ### PI_Iterator
 Method | Return type | Description
 -- | -- | --
-next(count) | boolean | Advances the iterator forward to the count of matches. Returned boolean indicates that the iterator hasn't stuck on the last match yet.
-previous(count) | boolean | Advances the iterator backward to the count of matches. Returned boolean indicates that the iterator hasn't stuck on the first match yet.
+next(count?) | boolean | Advances the iterator forward to the count of matches. Returned boolean indicates that the iterator hasn't stuck on the last match yet.
+previous(count?) | boolean | Advances the iterator backward to the count of matches. Returned boolean indicates that the iterator hasn't stuck on the first match yet.
 start_position() | PI_Position | The start position of the current match.
 end_position() | PI_Position | The end position of the current match.
 

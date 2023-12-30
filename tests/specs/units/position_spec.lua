@@ -15,7 +15,7 @@ describe("position", function()
       it("in bounds", function()
         h.set_cursor(2, 1)
         local p = position.from_cursor(true)
-        assert.are.same({ 2, 1 }, { p.line, p.column })
+        assert.position(p, { 2, 1, true })
       end)
 
       it("on the end of a line with n_is_pointable == false", function()
@@ -24,7 +24,7 @@ describe("position", function()
         h.set_cursor(2, 5)
         local p = position.from_cursor(false)
 
-        assert.are.same({ 2, 4 }, { p.line, p.column })
+        assert.position(p, { 2, 4, false })
       end)
 
       it("on the end of a line with n_is_pointable == true", function()
@@ -33,38 +33,38 @@ describe("position", function()
         h.set_cursor(2, 5)
         local p = position.from_cursor(true)
 
-        assert.are.same({ 2, 5 }, { p.line, p.column })
+        assert.position(p, { 2, 5, true })
       end)
     end)
 
     describe("from given coordinates", function()
       it("in bounds", function()
         local p = position.from_coordinates(2, 3, true)
-        assert.are.same({ 2, 3 }, { p.line, p.column })
+        assert.position(p, { 2, 3, true })
       end)
 
       it("on the end of a line with n_is_pointable == false", function()
         local p = position.from_coordinates(2, 5, false)
-        assert.are.same({ 2, 4 }, { p.line, p.column })
+        assert.position(p, { 2, 4, false })
       end)
 
       it("on the end of a line with n_is_pointable == true", function()
         local p = position.from_coordinates(2, 5, true)
-        assert.are.same({ 2, 5 }, { p.line, p.column })
+        assert.position(p, { 2, 5, true })
       end)
 
       it("out of bounds", function()
         local p = position.from_coordinates(-1, 5, true)
-        assert.are.same({ 1, 0 }, { p.line, p.column })
+        assert.position(p, { 1, 0, true })
 
         p = position.from_coordinates(4, 5, true)
-        assert.are.same({ 3, 4 }, { p.line, p.column })
+        assert.position(p, { 3, 4, true })
 
         p = position.from_coordinates(2, -2, true)
-        assert.are.same({ 2, 0 }, { p.line, p.column })
+        assert.position(p, { 2, 0, true })
 
         p = position.from_coordinates(2, 20, true)
-        assert.are.same({ 2, 5 }, { p.line, p.column })
+        assert.position(p, { 2, 5, true })
       end)
     end)
 
@@ -73,7 +73,7 @@ describe("position", function()
       local p2 = position.copy(p1)
       p1.move(1)
 
-      assert.are.same({ 2, 3 }, { p2.line, p2.column })
+      assert.position(p2, { 2, 3, true })
     end)
   end)
 
@@ -82,28 +82,28 @@ describe("position", function()
       local p = position.from_coordinates(2, 3, true)
       p.move(1)
 
-      assert.are.same({ 2, 4 }, { p.line, p.column })
+      assert.position(p, { 2, 4, true })
     end)
 
     it("backward", function()
       local p = position.from_coordinates(2, 3, true)
       p.move(-1)
 
-      assert.are.same({ 2, 2 }, { p.line, p.column })
+      assert.position(p, { 2, 2, true })
     end)
 
     it("on next line", function()
       local p = position.from_coordinates(2, 4, true)
       p.move(2)
 
-      assert.are.same({ 3, 0 }, { p.line, p.column })
+      assert.position(p, { 3, 0, true })
     end)
 
     it("on previous line", function()
       local p = position.from_coordinates(2, 2, true)
       p.move(-4)
 
-      assert.are.same({ 1, 3 }, { p.line, p.column })
+      assert.position(p, { 1, 3, true })
     end)
 
     it("through an empty line forward", function()
@@ -116,7 +116,7 @@ describe("position", function()
       local p = position.from_coordinates(1, 2, false)
       p.move(4)
 
-      assert.are.same({ 3, 1 }, { p.line, p.column })
+      assert.position(p, { 3, 1, false })
     end)
 
     it("through an empty line backward", function()
@@ -129,21 +129,21 @@ describe("position", function()
       local p = position.from_coordinates(3, 1, false)
       p.move(-4)
 
-      assert.are.same({ 1, 2 }, { p.line, p.column })
+      assert.position(p, { 1, 2, false })
     end)
 
     it("stuck against the end of the buffer", function()
       local p = position.from_coordinates(3, 0, false)
       p.move(4)
 
-      assert.are.same({ 3, 3 }, { p.line, p.column })
+      assert.position(p, { 3, 3, false })
     end)
 
     it("stuck against the start of the buffer", function()
       local p = position.from_coordinates(1, 3, false)
       p.move(-4)
 
-      assert.are.same({ 1, 0 }, { p.line, p.column })
+      assert.position(p, { 1, 0, false })
     end)
   end)
 
@@ -176,17 +176,17 @@ describe("position", function()
   describe("act", function()
     it("set_n_is_pointable", function()
       local p = position.from_coordinates(2, 5, true)
-      assert.are.same({ 2, 5 }, { p.line, p.column })
+      assert.position(p, { 2, 5, true })
 
       p.set_n_is_pointable(false)
-      assert.are.same({ 2, 4 }, { p.line, p.column })
+      assert.position(p, { 2, 4, false })
 
       p.move(1)
-      assert.are.same({ 3, 0 }, { p.line, p.column })
+      assert.position(p, { 3, 0, false })
 
       p.set_n_is_pointable(true)
       p.move(-1)
-      assert.are.same({ 2, 5 }, { p.line, p.column })
+      assert.position(p, { 2, 5, true })
     end)
 
     describe("select_region_to", function()

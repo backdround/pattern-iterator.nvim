@@ -125,6 +125,38 @@ local function match_position(_, arguments)
     and real_match_position.end_position.column == expected_end_position[2]
 end
 
+local function position(_, arguments)
+  local real_position = arguments[1]
+  local expected_position = arguments[2]
+
+  if real_position == nil then
+    arguments[1] = "nil"
+  else
+    arguments[1] = ("{ %s, %s, %s }"):format(
+      tostring(real_position.line),
+      tostring(real_position.column),
+      tostring(real_position.n_is_pointable)
+    )
+  end
+
+  local expected_pattern = "{ %s, %s, %s }"
+  arguments[2] = expected_pattern:format(
+    expected_position[1],
+    expected_position[2],
+    expected_position[3]
+  )
+
+  arguments.nofmt = { 1, 2 }
+
+  if real_position == nil then
+    return false
+  end
+
+  return real_position.line == expected_position[1]
+    and real_position.column == expected_position[2]
+    and real_position.n_is_pointable == expected_position[3]
+end
+
 local register = function()
   say:set_namespace("en")
   say:set(
@@ -173,6 +205,18 @@ local register = function()
     "match_position",
     match_position,
     "assertion.match_position"
+  )
+
+  say:set(
+    "assertion.position",
+    "Expected position to be:" ..
+    "\nReal:\n %s \nExpected:\n %s"
+  )
+  assert:register(
+    "assertion",
+    "position",
+    position,
+    "assertion.position"
   )
 end
 

@@ -52,7 +52,7 @@ end
 ---and returns a new pattern iterator.
 ---@param pattern string
 ---@param options? PI_SearchOptions additional options
-local new_around_position = function(pattern, options)
+local new_around = function(pattern, options)
   return perform_searching(pattern, options, "current")
 end
 
@@ -60,7 +60,7 @@ end
 ---and returns a new pattern iterator.
 ---@param pattern string
 ---@param options? PI_SearchOptions additional options
-local new_after_position = function(pattern, options)
+local new_forward = function(pattern, options)
   return perform_searching(pattern, options, "forward")
 end
 
@@ -68,12 +68,12 @@ end
 ---and returns a new pattern iterator.
 ---@param pattern string
 ---@param options? PI_SearchOptions additional options
-local new_before_position = function(pattern, options)
+local new_backward = function(pattern, options)
   return perform_searching(pattern, options, "backward")
 end
 
 return {
-  new_around_position = new_around_position,
-  new_after_position = new_after_position,
-  new_before_position = new_before_position,
+  new_around = new_around,
+  new_forward = new_forward,
+  new_backward = new_backward,
 }

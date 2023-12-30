@@ -13,6 +13,11 @@ Table of Contents                    *pattern-iterator.nvim-table-of-contents*
 ==============================================================================
 1. Pattern-iterator.nvim         *pattern-iterator.nvim-pattern-iterator.nvim*
 
+
+
+
+
+
 It’s a Neovim plugin that provides an iterator over vim-pattern matches in
 the buffer text.
 

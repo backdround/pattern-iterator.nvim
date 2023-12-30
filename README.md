@@ -1,5 +1,14 @@
 # Pattern-iterator.nvim
 
+<p align="center">
+  <a href="https://github.com/backdround/pattern-iterator.nvim/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/backdround/pattern-iterator.nvim/tests.yaml?branch=main&label=Tests&style=flat-square" alt="Tests">
+  </a>
+  <a href="https://github.com/backdround/pattern-iterator.nvim/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/backdround/pattern-iterator.nvim/docs.yaml?branch=main&label=Doc%20generation&status=gen&style=flat-square" alt="Tests">
+  </a>
+</p>
+
 It's a Neovim plugin that provides an iterator over vim-pattern matches
 in the buffer text.
 

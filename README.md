@@ -10,7 +10,7 @@
 </p>
 
 It's a Neovim plugin that provides an iterator over vim-pattern matches
-in the buffer text.
+in the buffer text. It can be use as API for another plugin.
 
 ## Usage example
 ```lua
@@ -30,6 +30,24 @@ local function place_cursor_to_end_of_lower_word()
 end
 ```
 
+## Usage in your plugin
+
+Add the plugin as a subtree in your git repository:
+```bash
+git subtree add --squash \
+    --prefix=pattern-iterator.nvim \
+    git@github.com:backdround/pattern-iterator.nvim.git main
+```
+
+Create a symlink from `./lua/your-plugin-name` directory:
+```bash
+ln -s ../../pattern-iterator.nvim/lua/pattern-iterator pattern-iterator
+```
+
+Use the API from your code:
+```lua
+local pattern_iterator = require("your-plugin-name.pattern-iterator")
+```
 
 ## API
 

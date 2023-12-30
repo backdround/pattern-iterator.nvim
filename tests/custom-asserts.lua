@@ -92,17 +92,17 @@ local function selected_region(_, arguments)
   return left_is_equal and right_is_equal
 end
 
-local function pattern_position(_, arguments)
-  local real_pattern_position = arguments[1]
+local function match_position(_, arguments)
+  local real_match_position = arguments[1]
   local expected_start_position = arguments[2]
   local expected_end_position = arguments[3]
 
-  if real_pattern_position == nil then
+  if real_match_position == nil then
     arguments[1] = "nil"
   else
     arguments[1] = ("{ start_position = %s, end_position = %s }"):format(
-      tostring(real_pattern_position.start_position),
-      tostring(real_pattern_position.end_position)
+      tostring(real_match_position.start_position),
+      tostring(real_match_position.end_position)
     )
   end
   local expected_pattern =
@@ -115,14 +115,14 @@ local function pattern_position(_, arguments)
   )
   arguments.nofmt = { 1, 2 }
 
-  if real_pattern_position == nil then
+  if real_match_position == nil then
     return false
   end
 
-  return real_pattern_position.start_position.line == expected_start_position[1]
-    and real_pattern_position.start_position.column == expected_start_position[2]
-    and real_pattern_position.end_position.line == expected_end_position[1]
-    and real_pattern_position.end_position.column == expected_end_position[2]
+  return real_match_position.start_position.line == expected_start_position[1]
+    and real_match_position.start_position.column == expected_start_position[2]
+    and real_match_position.end_position.line == expected_end_position[1]
+    and real_match_position.end_position.column == expected_end_position[2]
 end
 
 local register = function()
@@ -164,15 +164,15 @@ local register = function()
   )
 
   say:set(
-    "assertion.pattern_position",
-    "Expected pattern_position to be:" ..
+    "assertion.match_position",
+    "Expected match_position to be:" ..
     "\nReal:\n %s \nExpected:\n %s"
   )
   assert:register(
     "assertion",
-    "pattern_position",
-    pattern_position,
-    "assertion.pattern_position"
+    "match_position",
+    match_position,
+    "assertion.match_position"
   )
 end
 

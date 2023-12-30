@@ -1,4 +1,4 @@
----@class PI_PatternPosition
+---@class PI_Match
 ---@field start_position PI_Position
 ---@field end_position PI_Position
 

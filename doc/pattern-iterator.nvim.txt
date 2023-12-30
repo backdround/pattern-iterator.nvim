@@ -4,6 +4,7 @@
 Table of Contents                    *pattern-iterator.nvim-table-of-contents*
 
 1. Pattern-iterator.nvim         |pattern-iterator.nvim-pattern-iterator.nvim|
+  - Visual representation|pattern-iterator.nvim-pattern-iterator.nvim-visual-representation|
   - Usage example  |pattern-iterator.nvim-pattern-iterator.nvim-usage-example|
   - Usage in your plugin|pattern-iterator.nvim-pattern-iterator.nvim-usage-in-your-plugin|
   - API                      |pattern-iterator.nvim-pattern-iterator.nvim-api|
@@ -21,6 +22,18 @@ Table of Contents                    *pattern-iterator.nvim-table-of-contents*
 
 It’s a Neovim plugin that provides an iterator over vim-pattern matches in
 the buffer text. It can be use as API for another plugin.
+
+
+VISUAL REPRESENTATION*pattern-iterator.nvim-pattern-iterator.nvim-visual-representation*
+
+>lua
+    local target_position = search_target_posi┃tion(opts, n_is_pointable)
+    --           ^------^                 ^-------^                      
+    --          previous()      <=     new_around("position")     =>     
+    if not target_position then
+    --            ^------^     
+    --      =>     next()      
+<
 
 
 USAGE EXAMPLE      *pattern-iterator.nvim-pattern-iterator.nvim-usage-example*

@@ -51,8 +51,12 @@ globals:
     args:
       - type: table
       - type: table
-  assert.pattern_position:
+  assert.match_position:
     args:
       - type: table
+      - type: table
+      - type: table
+  assert.position:
+    args:
       - type: table
       - type: table

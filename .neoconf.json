@@ -18,7 +18,8 @@
         "assert.cursor_at",
         "assert.buffer",
         "assert.selected_region",
-        "assert.pattern_position"
+        "assert.match_position",
+        "assert.position"
       ]
     }
   }

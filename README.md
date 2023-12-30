@@ -12,6 +12,16 @@
 It's a Neovim plugin that provides an iterator over vim-pattern matches
 in the buffer text. It can be use as API for another plugin.
 
+## Visual representation
+```lua
+local target_position = search_target_posi┃tion(opts, n_is_pointable)
+--           ^------^                 ^-------^                      
+--          previous()      <=     new_around("position")     =>     
+if not target_position then
+--            ^------^     
+--      =>     next()      
+```
+
 ## Usage example
 ```lua
 local pattern_iterator = require("pattern-iterator")

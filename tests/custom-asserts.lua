@@ -125,6 +125,42 @@ local function match_position(_, arguments)
     and real_match_position.end_position.column == expected_end_position[2]
 end
 
+local function iterator(_, arguments)
+  local real_iterator = arguments[1]
+  local expected_start_position = arguments[2]
+  local expected_end_position = arguments[3]
+
+  if real_iterator == nil then
+    arguments[1] = "nil"
+  else
+    arguments[1] = ("{ start_position = %s, end_position = %s }"):format(
+      tostring(real_iterator.start_position()),
+      tostring(real_iterator.end_position())
+    )
+  end
+  local expected_pattern =
+    "{ start_position = { %s, %s }, end_position = { %s, %s } }"
+  arguments[2] = expected_pattern:format(
+    expected_start_position[1],
+    expected_start_position[2],
+    expected_end_position[1],
+    expected_end_position[2]
+  )
+  arguments.nofmt = { 1, 2 }
+
+  if real_iterator == nil then
+    return false
+  end
+
+  local start_position = real_iterator.start_position()
+  local end_position = real_iterator.end_position()
+
+  return start_position.line == expected_start_position[1]
+    and start_position.column == expected_start_position[2]
+    and end_position.line == expected_end_position[1]
+    and end_position.column == expected_end_position[2]
+end
+
 local function position(_, arguments)
   local real_position = arguments[1]
   local expected_position = arguments[2]
@@ -205,6 +241,18 @@ local register = function()
     "match_position",
     match_position,
     "assertion.match_position"
+  )
+
+  say:set(
+    "assertion.iterator",
+    "Expected iterator to be:" ..
+    "\nReal:\n %s \nExpected:\n %s"
+  )
+  assert:register(
+    "assertion",
+    "iterator",
+    iterator,
+    "assertion.iterator"
   )
 
   say:set(

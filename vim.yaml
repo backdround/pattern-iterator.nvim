@@ -56,6 +56,11 @@ globals:
       - type: table
       - type: table
       - type: table
+  assert.iterator:
+    args:
+      - type: table
+      - type: table
+      - type: table
   assert.position:
     args:
       - type: table

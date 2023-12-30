@@ -11,6 +11,7 @@
         "assert.buffer",
         "assert.selected_region",
         "assert.match_position",
+        "assert.iterator",
         "assert.position"
       ]
     },

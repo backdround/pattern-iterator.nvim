@@ -10,6 +10,14 @@ describe("pattern-iterator", function()
     <a> some text
   ]]))
 
+  it("positions", function()
+    local iterator = pattern_iterator.new_around_position("\\M<a>", {
+      from_search_position = { 2, 6 }
+    })
+    assert.position(iterator.start_position(), { 2, 5, false })
+    assert.position(iterator.end_position(), { 2, 7, false })
+  end)
+
   describe("creation", function()
     describe("new_around_position", function()
       it("from a match", function()

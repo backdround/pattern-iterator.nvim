@@ -5,6 +5,7 @@ Table of Contents                    *pattern-iterator.nvim-table-of-contents*
 
 1. Pattern-iterator.nvim         |pattern-iterator.nvim-pattern-iterator.nvim|
   - Usage example  |pattern-iterator.nvim-pattern-iterator.nvim-usage-example|
+  - Usage in your plugin|pattern-iterator.nvim-pattern-iterator.nvim-usage-in-your-plugin|
   - API                      |pattern-iterator.nvim-pattern-iterator.nvim-api|
 2. Module                                       |pattern-iterator.nvim-module|
 3. PI_Iterator                             |pattern-iterator.nvim-pi_iterator|
@@ -19,7 +20,7 @@ Table of Contents                    *pattern-iterator.nvim-table-of-contents*
 
 
 It’s a Neovim plugin that provides an iterator over vim-pattern matches in
-the buffer text.
+the buffer text. It can be use as API for another plugin.
 
 
 USAGE EXAMPLE      *pattern-iterator.nvim-pattern-iterator.nvim-usage-example*
@@ -39,6 +40,29 @@ USAGE EXAMPLE      *pattern-iterator.nvim-pattern-iterator.nvim-usage-example*
     
       iterator.end_position().set_cursor()
     end
+<
+
+
+USAGE IN YOUR PLUGIN*pattern-iterator.nvim-pattern-iterator.nvim-usage-in-your-plugin*
+
+Add the plugin as a subtree in your git repository:
+
+>bash
+    git subtree add --squash \
+        --prefix=pattern-iterator.nvim \
+        git@github.com:backdround/pattern-iterator.nvim.git main
+<
+
+Create a symlink from `./lua/your-plugin-name` directory:
+
+>bash
+    ln -s ../../pattern-iterator.nvim/lua/pattern-iterator pattern-iterator
+<
+
+Use the API from your code:
+
+>lua
+    local pattern_iterator = require("your-plugin-name.pattern-iterator")
 <
 
 

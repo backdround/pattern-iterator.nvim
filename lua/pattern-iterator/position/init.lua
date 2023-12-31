@@ -85,6 +85,32 @@ local new_position = function(line, column, n_is_pointable)
     end
   end
 
+  ---Performs current operator to the region between the current and the given point.
+  ---@param position PI_Position
+  p.perform_operator_to = function(position)
+    if utils.mode() ~= "operator-pending" then
+      error("Unable to perform operator: current mode isn't operator pending")
+    end
+
+    local p1 = M.copy(p)
+    local p2 = M.copy(position)
+
+    if p1 > p2 then
+      p1, p2 = p2, p1
+    end
+
+    -- Use vim.fn.setcharpos instead vim.api.nvim_buf_set_mark, because the
+    -- later ignores subsequent <bs>'s.
+    vim.fn.setcharpos("'<", { 0, p1.line, p1.column + 1, 0 })
+    vim.fn.setcharpos("'>", { 0, p2.line, p2.column + 1, 0 })
+
+    vim.api.nvim_feedkeys("gv", "nx", false)
+
+    if vim.fn.visualmode() ~= "v" and vim.fn.visualmode() ~= "" then
+      vim.api.nvim_feedkeys("v", "nx", false)
+    end
+  end
+
   ---Sets new n_is_pointable
   ---@param new_n_is_pointable boolean
   p.set_n_is_pointable = function(new_n_is_pointable)

@@ -250,4 +250,49 @@ describe("pattern-iterator", function()
     assert.is.True(iterator.next())
     assert.iterator(iterator, { 2, 4 }, { 3, 0 })
   end)
+
+  it("dense matches placement", function()
+    h.get_preset("aaaaa")()
+
+    local iterator = pattern_iterator.new_around("\\Ma", {
+      from_search_position = { 1, 2 },
+    })
+
+    assert.iterator(iterator, { 1, 2 }, { 1, 2 })
+
+    assert.is.True(iterator.next(2))
+    assert.iterator(iterator, { 1, 4 }, { 1, 4 })
+
+    assert.is.False(iterator.next())
+    assert.iterator(iterator, { 1, 4 }, { 1, 4 })
+
+    assert.is.True(iterator.previous(4))
+    assert.iterator(iterator, { 1, 0 }, { 1, 0 })
+
+    assert.is.False(iterator.previous())
+    assert.iterator(iterator, { 1, 0 }, { 1, 0 })
+
+    assert.is.True(iterator.next(2))
+    assert.iterator(iterator, { 1, 2 }, { 1, 2 })
+  end)
+
+  it("non-ascii text", function()
+    h.get_preset("некоторые слова тут")()
+
+    local lower_word = "\\v[[:lower:]]+"
+    local iterator = pattern_iterator.new_around(lower_word, {
+      from_search_position = { 1, 12 },
+    })
+
+    assert.iterator(iterator, { 1, 10 }, { 1, 14 })
+
+    assert.is.True(iterator.next())
+    assert.iterator(iterator, { 1, 16 }, { 1, 18 })
+
+    assert.is.True(iterator.previous())
+    assert.iterator(iterator, { 1, 10 }, { 1, 14 })
+
+    assert.is.True(iterator.previous())
+    assert.iterator(iterator, { 1, 0 }, { 1, 8 })
+  end)
 end)

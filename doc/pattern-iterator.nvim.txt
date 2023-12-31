@@ -162,9 +162,11 @@ API                          *pattern-iterator.nvim-pattern-iterator.nvim-api*
   set_cursor()                         -                       Sets the cursor to the
                                                                position.
 
-  select_region_to(position)           -                       Selects the region
-                                                               between to another
-                                                               position.
+  select_region_to(position)           -                       Selects a region
+                                                               between the current and
+                                                               another position. It
+                                                               works only for normal
+                                                               or visual mode.
 
   move(offset)                         -                       Moves the position
                                                                according to the

@@ -53,9 +53,14 @@ local new_position = function(line, column, n_is_pointable)
     vim.api.nvim_win_set_cursor(0, byte_position)
   end
 
-  ---Selects a region from the current position to a given position.
+  ---Selects a region from the current position to a given position. It works
+  ---only for normal or visual mode.
   ---@param position PI_Position
   p.select_region_to = function(position)
+    if utils.mode() ~= "visual" and utils.mode() ~= "normal" then
+      error("Unable to select region: current mode isn't normal or visual")
+    end
+
     local p1 = M.copy(p)
     local p2 = M.copy(position)
 

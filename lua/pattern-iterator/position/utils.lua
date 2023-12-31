@@ -1,5 +1,20 @@
 local M = {}
 
+---@return "operator-pending"|"visual"|"normal"|"insert"
+M.mode = function()
+  local m = tostring(vim.fn.mode(true))
+
+  if m:find("o") then
+    return "operator-pending"
+  elseif m:find("[vV]") then
+    return "visual"
+  elseif m:find("i") then
+    return "insert"
+  else
+    return "normal"
+  end
+end
+
 ---Returns line size in virtual columns.
 ---@param line_index number
 ---@param n_is_pointable boolean position can point to a "\n"

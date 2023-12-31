@@ -165,8 +165,15 @@ API                          *pattern-iterator.nvim-pattern-iterator.nvim-api*
   select_region_to(position)           -                       Selects a region
                                                                between the current and
                                                                another position. It
-                                                               works only for normal
-                                                               or visual mode.
+                                                               works only in normal or
+                                                               visual mode.
+
+  perform_operator_to(position)        -                       Sets a region between
+                                                               the current and another
+                                                               position for operator
+                                                               to perform. It works
+                                                               only in
+                                                               operator pending mode.
 
   move(offset)                         -                       Moves the position
                                                                according to the

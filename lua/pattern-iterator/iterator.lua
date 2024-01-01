@@ -1,4 +1,3 @@
-local position = require(({ ... })[1]:gsub("[^.]+$", "") .. "position")
 local search_pattern = require(({ ... })[1]:gsub("[^.]+$", "") .. "search-pattern")
 
 ---Pattern iterator represents positions of the current match.
@@ -23,16 +22,16 @@ local new = function(pattern, base_match, n_is_pointable)
   ---Returns the start position of the match
   ---@return PI_Position
   i.start_position = function()
-    local p = position.copy(i._current_match.start_position)
-    p.set_n_is_pointable(i._n_is_pointable)
+    local p = vim.deepcopy(i._current_match.start_position)
+    p:set_n_is_pointable(i._n_is_pointable)
     return p
   end
 
   ---Returns the end position of the match
   ---@return PI_Position
   i.end_position = function()
-    local p = position.copy(i._current_match.end_position)
-    p.set_n_is_pointable(i._n_is_pointable)
+    local p = vim.deepcopy(i._current_match.end_position)
+    p:set_n_is_pointable(i._n_is_pointable)
     return p
   end
 

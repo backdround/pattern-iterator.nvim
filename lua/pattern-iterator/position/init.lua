@@ -48,46 +48,49 @@ local new_position = function(line, column, n_is_pointable)
   setmetatable(p, position_metatable)
 
   ---Sets the cursor to the current position.
-  p.set_cursor = function()
-    local byte_position = utils.from_virtual_to_byte({ p.line, p.column })
+  ---@param self PI_Position
+  p.set_cursor = function(self)
+    local byte_position = utils.from_virtual_to_byte({ self.line, self.column })
     vim.api.nvim_win_set_cursor(0, byte_position)
   end
 
   ---Indicates that the current position is after the cursor.
+  ---@param self PI_Position
   ---@return boolean
-  p.after_cursor = function()
+  p.after_cursor = function(self)
     local byte_cursor_position = vim.api.nvim_win_get_cursor(0)
     local cursor_position = utils.from_byte_to_virtual(byte_cursor_position)
 
-    if p.line == cursor_position[1] then
-      return p.column > cursor_position[2]
+    if self.line == cursor_position[1] then
+      return self.column > cursor_position[2]
     end
-    return p.line > cursor_position[1]
+    return self.line > cursor_position[1]
   end
 
   ---Indicates that the current position is before the cursor.
+  ---@param self PI_Position
   ---@return boolean
-  p.before_cursor = function()
+  p.before_cursor = function(self)
     local byte_cursor_position = vim.api.nvim_win_get_cursor(0)
     local cursor_position = utils.from_byte_to_virtual(byte_cursor_position)
 
-    if p.line == cursor_position[1] then
-      return p.column < cursor_position[2]
+    if self.line == cursor_position[1] then
+      return self.column < cursor_position[2]
     end
-    return p.line < cursor_position[1]
+    return self.line < cursor_position[1]
   end
-
 
   ---Selects a region from the current position to a given position. It works
   ---only for normal or visual mode.
+  ---@param self PI_Position
   ---@param position PI_Position
-  p.select_region_to = function(position)
+  p.select_region_to = function(self, position)
     if utils.mode() ~= "visual" and utils.mode() ~= "normal" then
       error("Unable to select region: current mode isn't normal or visual")
     end
 
-    local p1 = M.copy(p)
-    local p2 = M.copy(position)
+    local p1 = vim.deepcopy(self)
+    local p2 = vim.deepcopy(position)
 
     if p1 > p2 then
       p1, p2 = p2, p1
@@ -95,7 +98,7 @@ local new_position = function(line, column, n_is_pointable)
 
     local selection = vim.api.nvim_get_option_value("selection", {})
     if selection == "exclusive" then
-      p2.move(1)
+      p2:move(1)
     end
 
     -- Use vim.fn.setcharpos instead vim.api.nvim_buf_set_mark, because the
@@ -111,14 +114,15 @@ local new_position = function(line, column, n_is_pointable)
   end
 
   ---Performs current operator to the region between the current and the given point.
+  ---@param self PI_Position
   ---@param position PI_Position
-  p.perform_operator_to = function(position)
+  p.perform_operator_to = function(self, position)
     if utils.mode() ~= "operator-pending" then
       error("Unable to perform operator: current mode isn't operator pending")
     end
 
-    local p1 = M.copy(p)
-    local p2 = M.copy(position)
+    local p1 = vim.deepcopy(self)
+    local p2 = vim.deepcopy(position)
 
     if p1 > p2 then
       p1, p2 = p2, p1
@@ -137,66 +141,70 @@ local new_position = function(line, column, n_is_pointable)
   end
 
   ---Sets new n_is_pointable
+  ---@param self PI_Position
   ---@param new_n_is_pointable boolean
-  p.set_n_is_pointable = function(new_n_is_pointable)
-    local line_length = utils.virtual_line_length(p.line, new_n_is_pointable)
-    if new_n_is_pointable == false and p.column == line_length then
+  p.set_n_is_pointable = function(self, new_n_is_pointable)
+    local line_length = utils.virtual_line_length(self.line, new_n_is_pointable)
+    if new_n_is_pointable == false and self.column == line_length then
       -- Correct column
-      p.column = math.max(1, line_length - 1)
+      self.column = math.max(1, line_length - 1)
     end
 
-    p.n_is_pointable = new_n_is_pointable
+    self.n_is_pointable = new_n_is_pointable
   end
 
-  local move_forward = function(offset)
+  local move_forward = function(self, offset)
     local last_line = vim.api.nvim_buf_line_count(0)
     while true do
-      local line_length = utils.virtual_line_length(p.line, p.n_is_pointable)
-      local available_places_on_line = (line_length - 1) - p.column
+      local line_length =
+        utils.virtual_line_length(self.line, self.n_is_pointable)
+      local available_places_on_line = (line_length - 1) - self.column
 
       if available_places_on_line >= offset then
-        p.column = p.column + offset
+        self.column = self.column + offset
         return
       end
 
-      if p.line == last_line then
-        p.column = line_length - 1
+      if self.line == last_line then
+        self.column = line_length - 1
         return
       end
 
-      p.column = 0
-      p.line = p.line + 1
+      self.column = 0
+      self.line = self.line + 1
       offset = offset - (available_places_on_line + 1)
     end
   end
 
-  local move_backward = function(offset)
+  local move_backward = function(self, offset)
     while true do
-      if p.column >= offset then
-        p.column = p.column - offset
+      if self.column >= offset then
+        self.column = self.column - offset
         return
       end
 
-      if p.line == 1 then
-        p.column = 0
+      if self.line == 1 then
+        self.column = 0
         return
       end
 
-      offset = offset - (p.column + 1)
-      p.line = p.line - 1
-      local line_length = utils.virtual_line_length(p.line, p.n_is_pointable)
-      p.column = line_length - 1
+      offset = offset - (self.column + 1)
+      self.line = self.line - 1
+      local line_length =
+        utils.virtual_line_length(self.line, self.n_is_pointable)
+      self.column = line_length - 1
     end
   end
 
   ---Moves the position according to the offset. If offset > 0 then it moves
   ---forward else backward.
+  ---@param self PI_Position
   ---@param offset number
-  p.move = function(offset)
+  p.move = function(self, offset)
     if offset > 0 then
-      move_forward(offset)
+      move_forward(self, offset)
     else
-      move_backward(math.abs(offset))
+      move_backward(self, math.abs(offset))
     end
   end
 
@@ -232,13 +240,6 @@ M.from_coordinates = function(line, column, n_is_pointable)
 
   local coordinates = utils.place_in_bounds({ line, column }, n_is_pointable)
   return new_position(coordinates[1], coordinates[2], n_is_pointable)
-end
-
----Creates PI_Position from an existing PI_Position
----@param p PI_Position
----@return PI_Position
-M.copy = function(p)
-  return new_position(p.line, p.column, p.n_is_pointable)
 end
 
 return M

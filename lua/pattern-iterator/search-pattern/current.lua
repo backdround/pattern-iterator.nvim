@@ -6,14 +6,14 @@ local utils = require(({ ... })[1]:gsub("[^.]+$", "") .. "utils")
 ---@param relative_position PI_Position
 ---@return PI_Match?
 local search_current = function(pattern, relative_position)
-  relative_position.set_cursor()
+  relative_position:set_cursor()
 
   local start_match_position = utils.vim_search(pattern, "bcWn")
   if start_match_position == nil then
     return nil
   end
 
-  start_match_position.set_cursor()
+  start_match_position:set_cursor()
 
   -- Searches the end if the cursor is palced at "$"
   local end_match_position = utils.vim_search(pattern, "becWn")

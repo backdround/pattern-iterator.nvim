@@ -7,7 +7,7 @@ local utils = require(({ ... })[1]:gsub("[^.]+$", "") .. "utils")
 ---@param relative_position PI_Position
 ---@return PI_Match?
 local search_previous = function(pattern, relative_position)
-  relative_position.set_cursor()
+  relative_position:set_cursor()
 
   local offset = 1
   local end_match_position = nil
@@ -22,11 +22,11 @@ local search_previous = function(pattern, relative_position)
       break
     end
 
-    potential_end_match_position.move(-offset)
-    potential_end_match_position.set_cursor()
+    potential_end_match_position:move(-offset)
+    potential_end_match_position:set_cursor()
   end
 
-  end_match_position.set_cursor()
+  end_match_position:set_cursor()
   local start_match_position = utils.vim_search(pattern, "bcWn")
 
   return {

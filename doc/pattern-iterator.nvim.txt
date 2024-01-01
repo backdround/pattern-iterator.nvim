@@ -51,7 +51,7 @@ USAGE EXAMPLE      *pattern-iterator.nvim-pattern-iterator.nvim-usage-example*
         return
       end
     
-      iterator.end_position().set_cursor()
+      iterator.end_position():set_cursor()
     end
 <
 

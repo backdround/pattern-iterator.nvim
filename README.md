@@ -36,7 +36,7 @@ local function place_cursor_to_end_of_lower_word()
     return
   end
 
-  iterator.end_position():set_cursor()
+  iterator:end_position():set_cursor()
 end
 ```
 

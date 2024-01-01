@@ -134,8 +134,8 @@ local function iterator(_, arguments)
     arguments[1] = "nil"
   else
     arguments[1] = ("{ start_position = %s, end_position = %s }"):format(
-      tostring(real_iterator.start_position()),
-      tostring(real_iterator.end_position())
+      tostring(real_iterator:start_position()),
+      tostring(real_iterator:end_position())
     )
   end
   local expected_pattern =
@@ -152,8 +152,8 @@ local function iterator(_, arguments)
     return false
   end
 
-  local start_position = real_iterator.start_position()
-  local end_position = real_iterator.end_position()
+  local start_position = real_iterator:start_position()
+  local end_position = real_iterator:end_position()
 
   return start_position.line == expected_start_position[1]
     and start_position.column == expected_start_position[2]

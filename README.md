@@ -94,6 +94,8 @@ Method / Member | Return type | Description
 set_cursor() | - | Sets the cursor to the position.
 select_region_to(position) | - | Selects a region between the current and another position. It works only in `normal` or `visual` mode.
 perform_operator_to(position) | - | Sets a region between the current and another position for operator to perform. It works only in `operator pending` mode.
+before_cursor() | boolean | Indicates that the current position is before the cursor.
+after_cursor() | boolean | Indicates that the current position is after the cursor.
 move(offset) | - | Moves the position according to the offset. If offset > 0 then it moves forward else backward.
 set_n_is_pointable(n_is_pointable) | - | Sets the flag that indicates that the position can point to the `\n`.
 line | number | Position's line.

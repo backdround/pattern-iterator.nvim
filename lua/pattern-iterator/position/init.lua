@@ -53,6 +53,31 @@ local new_position = function(line, column, n_is_pointable)
     vim.api.nvim_win_set_cursor(0, byte_position)
   end
 
+  ---Indicates that the current position is after the cursor.
+  ---@return boolean
+  p.after_cursor = function()
+    local byte_cursor_position = vim.api.nvim_win_get_cursor(0)
+    local cursor_position = utils.from_byte_to_virtual(byte_cursor_position)
+
+    if p.line == cursor_position[1] then
+      return p.column > cursor_position[2]
+    end
+    return p.line > cursor_position[1]
+  end
+
+  ---Indicates that the current position is before the cursor.
+  ---@return boolean
+  p.before_cursor = function()
+    local byte_cursor_position = vim.api.nvim_win_get_cursor(0)
+    local cursor_position = utils.from_byte_to_virtual(byte_cursor_position)
+
+    if p.line == cursor_position[1] then
+      return p.column < cursor_position[2]
+    end
+    return p.line < cursor_position[1]
+  end
+
+
   ---Selects a region from the current position to a given position. It works
   ---only for normal or visual mode.
   ---@param position PI_Position

@@ -189,6 +189,30 @@ describe("position", function()
       assert.position(p, { 2, 5, true })
     end)
 
+    it("after_cursor", function()
+      local p = position.from_coordinates(2, 2, true)
+      h.set_cursor(2, 1)
+      assert.is.True(p.after_cursor())
+
+      h.set_cursor(2, 2)
+      assert.is.False(p.after_cursor())
+
+      h.set_cursor(2, 3)
+      assert.is.False(p.after_cursor())
+    end)
+
+    it("before_cursor", function()
+      local p = position.from_coordinates(2, 2, true)
+      h.set_cursor(2, 3)
+      assert.is.True(p.before_cursor())
+
+      h.set_cursor(2, 2)
+      assert.is.False(p.before_cursor())
+
+      h.set_cursor(2, 1)
+      assert.is.False(p.before_cursor())
+    end)
+
     describe("select_region_to", function()
       it("forward", function()
         local p1 = position.from_coordinates(1, 3, false)

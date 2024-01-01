@@ -211,6 +211,8 @@ local new_position = function(line, column, n_is_pointable)
   return p
 end
 
+local prototype = new_position(0, 0, true)
+
 ---Creates PI_Position from the position of the current cursor.
 ---@param n_is_pointable boolean position can point to a \n
 ---@return PI_Position
@@ -220,9 +222,15 @@ M.from_cursor = function(n_is_pointable)
   end
 
   local byte_position = vim.api.nvim_win_get_cursor(0)
-  local position = utils.from_byte_to_virtual(byte_position)
-  position = utils.place_in_bounds(position, n_is_pointable)
-  return new_position(position[1], position[2], n_is_pointable)
+  local cursor_position = utils.from_byte_to_virtual(byte_position)
+  cursor_position = utils.place_in_bounds(cursor_position, n_is_pointable)
+
+  local final_position = vim.deepcopy(prototype)
+  final_position.line = cursor_position[1]
+  final_position.column = cursor_position[2]
+  final_position:set_n_is_pointable(n_is_pointable)
+
+  return final_position
 end
 
 ---Creates PI_Position from the given virtual position.
@@ -239,7 +247,13 @@ M.from_coordinates = function(line, column, n_is_pointable)
   end
 
   local coordinates = utils.place_in_bounds({ line, column }, n_is_pointable)
-  return new_position(coordinates[1], coordinates[2], n_is_pointable)
+
+  local final_position = vim.deepcopy(prototype)
+  final_position.line = coordinates[1]
+  final_position.column = coordinates[2]
+  final_position:set_n_is_pointable(n_is_pointable)
+
+  return final_position
 end
 
 return M

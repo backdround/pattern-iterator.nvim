@@ -187,8 +187,7 @@ API                          *pattern-iterator.nvim-pattern-iterator.nvim-api*
 
   line                                 number                  Position’s line.
 
-  column                               number                  Position’s virtual
-                                                               column.
+  char_index                           number                  Position’s char index.
 
   n_is_pointable                       boolean                 The flag that indicates
                                                                that the position can

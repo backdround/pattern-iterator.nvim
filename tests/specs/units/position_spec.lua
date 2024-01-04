@@ -512,4 +512,84 @@ describe("position", function()
       end)
     end)
   end)
+
+  describe("with multi-column characters", function()
+    local double_tab = "		"
+    local buffer = ([[
+      |%ssome
+      |%stabs
+      |%shere
+    ]]):format(double_tab, double_tab, double_tab)
+    before_each(h.get_preset(buffer, { 2, 3 }))
+
+    describe("create", function()
+      it("from cursor", function()
+        local p = position.from_cursor(true)
+        assert.position(p, { 2, 3, true })
+      end)
+
+      it("from coordinates", function()
+        local p = position.from_coordinates(1, 3, true)
+        assert.position(p, { 1, 3, true })
+      end)
+    end)
+
+    describe("move", function()
+      it("forward", function()
+        local p = position.from_coordinates(1, 0, true)
+        p:move(8)
+        assert.position(p, { 2, 0, true })
+      end)
+
+      it("backward", function()
+        local p = position.from_coordinates(2, 2, true)
+        p:move(-3)
+        assert.position(p, { 1, 7, true })
+      end)
+    end)
+
+    describe("act", function()
+      it("after_cursor", function()
+        local p = position.from_coordinates(2, 4, true)
+        assert.is.True(p:after_cursor())
+        p:move(-1)
+        assert.is.False(p:after_cursor())
+      end)
+
+      it("before_cursor", function()
+        local p = position.from_coordinates(2, 2, true)
+        assert.is.True(p:before_cursor())
+        p:move(1)
+        assert.is.False(p:before_cursor())
+      end)
+
+      it("select_region_to", function()
+        local p1 = position.from_coordinates(2, 1, true)
+        local p2 = position.from_coordinates(3, 1, true)
+
+        p1:select_region_to(p2)
+        h.feedkeys("d", true)
+
+        assert.buffer([[
+          |		some
+          |	here
+        ]])
+      end)
+
+      it("set_cursor", function()
+        local p1 = position.from_coordinates(1, 3, true)
+        p1:set_cursor()
+        p1 = position.from_cursor(true)
+
+        local p2 = position.from_coordinates(3, 2, true)
+
+        p1:select_region_to(p2)
+        h.feedkeys("d", true)
+
+        assert.buffer([[
+          |		here
+        ]])
+      end)
+    end)
+  end)
 end)

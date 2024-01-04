@@ -432,4 +432,84 @@ describe("position", function()
       end)
     end)
   end)
+
+  describe("with multi-byte characters", function()
+    before_each(h.get_preset([[
+      тут
+      несколько
+      слов
+    ]], { 1, 2 }))
+
+    describe("create", function()
+      it("from cursor", function()
+        local p = position.from_cursor(true)
+        assert.position(p, { 1, 2, true })
+      end)
+
+      it("from coordinates", function()
+        local p = position.from_coordinates(2, 3, true)
+        assert.position(p, { 2, 3, true })
+      end)
+    end)
+
+    describe("move", function()
+      it("forward", function()
+        local p = position.from_coordinates(1, 2, true)
+        p:move(2)
+        assert.position(p, { 2, 0, true })
+      end)
+
+      it("backward", function()
+        local p = position.from_coordinates(2, 2, true)
+        p:move(-4)
+        assert.position(p, { 1, 2, true })
+      end)
+    end)
+
+    describe("act", function()
+      it("after_cursor", function()
+        local p = position.from_coordinates(1, 3, true)
+        assert.is.True(p:after_cursor())
+        p:move(-1)
+        assert.is.False(p:after_cursor())
+      end)
+
+      it("before_cursor", function()
+        local p = position.from_coordinates(1, 1, true)
+        assert.is.True(p:before_cursor())
+        p:move(1)
+        assert.is.False(p:before_cursor())
+      end)
+
+      it("select_region_to", function()
+        local p1 = position.from_coordinates(2, 1, true)
+        local p2 = position.from_coordinates(3, 1, true)
+
+        p1:select_region_to(p2)
+        h.feedkeys("d", true)
+
+        assert.buffer([[
+          тут
+          нов
+        ]])
+      end)
+
+      it("set_cursor", function()
+        local p1 = position.from_cursor(true)
+        p1:move(3)
+        p1:set_cursor()
+
+        p1 = position.from_cursor(true)
+        local p2 = position.from_coordinates(3, 1, true)
+
+        p1:select_region_to(p2)
+        h.feedkeys("d", true)
+
+        assert.buffer([[
+          тут
+          нов
+        ]])
+      end)
+    end)
+  end)
 end)

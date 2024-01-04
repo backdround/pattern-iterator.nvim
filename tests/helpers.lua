@@ -17,6 +17,10 @@ M.get_user_lines = function(text)
     table.remove(lines, #lines)
   end
 
+  if #lines == 0 then
+    return { "" }
+  end
+
   -- Find minimal prepending space gap
   local min_prepending_gap = lines[1]:match("^[%s]*"):len()
   for _, line in pairs(lines) do

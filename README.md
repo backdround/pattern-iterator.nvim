@@ -98,5 +98,5 @@ after_cursor() | boolean | Indicates that the current position is after the curs
 move(offset) | - | Moves the position according to the offset. If offset > 0 then it moves forward else backward.
 set_n_is_pointable(n_is_pointable) | - | Sets the flag that indicates that the position can point to the `\n`.
 line | number | Position's line.
-column | number | Position's virtual column.
+char_index | number | Position's char index.
 n_is_pointable | boolean | The flag that indicates that the position can point to the `\n`.

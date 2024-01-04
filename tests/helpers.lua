@@ -107,19 +107,9 @@ M.feedkeys = function(keys, wait_for_finish)
 end
 
 ---@param line number 1-bazed
----@param column number 0-bazed virtual column
-M.set_cursor = function(line, column)
-  local line_length = vim.fn.virtcol({ line, "$" }) - 1
-  if column == line_length then
-    -- vim.fn.virtcol2col converts position to a '\n' the same way
-    -- as if it converts position to a last character.
-    -- so, do it manually.
-    column = vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:len()
-  else
-    column = vim.fn.virtcol2col(0, line, column + 1) - 1
-  end
-
-  vim.api.nvim_win_set_cursor(0, { line, column })
+---@param char_index number 0-bazed character index
+M.set_cursor = function(line, char_index)
+  vim.fn.setcursorcharpos(line, char_index + 1)
 end
 
 ---Performs a given function with given arguments through a keymap

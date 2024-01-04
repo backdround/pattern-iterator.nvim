@@ -19,7 +19,7 @@ M.get_cursor = function()
   local position = vim.fn.getcursorcharpos()
   return {
     position[2],
-    position[3] - 1,
+    position[3],
   }
 end
 
@@ -33,17 +33,17 @@ M.place_in_bounds = function(line, char_index, n_is_pointable)
   if line > last_line then
     return {
       last_line,
-      M.line_length(last_line, n_is_pointable) - 1,
+      M.line_length(last_line, n_is_pointable),
     }
   end
 
   if line < 1 then
-    return { 1, 0, }
+    return { 1, 1 }
   end
 
-  local max_char_index = M.line_length(line, n_is_pointable) - 1
+  local max_char_index = M.line_length(line, n_is_pointable)
   char_index = math.min(char_index, max_char_index)
-  char_index = math.max(char_index, 0)
+  char_index = math.max(char_index, 1)
 
   return { line, char_index }
 end

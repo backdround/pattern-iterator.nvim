@@ -50,7 +50,7 @@ local new_position = function(line, char_index, n_is_pointable)
   ---Sets the cursor to the current position.
   ---@param self PI_Position
   p.set_cursor = function(self)
-    vim.fn.setcursorcharpos(self.line, self.char_index + 1)
+    vim.fn.setcursorcharpos(self.line, self.char_index)
   end
 
   ---Indicates that the current position is after the cursor.
@@ -95,8 +95,8 @@ local new_position = function(line, char_index, n_is_pointable)
 
     -- Use vim.fn.setpos instead vim.api.nvim_buf_set_mark, because the
     -- later ignores subsequent <bs>'s.
-    vim.fn.setcharpos("'<", { 0, p1.line, p1.char_index + 1, 0 })
-    vim.fn.setcharpos("'>", { 0, p2.line, p2.char_index + 1, 0 })
+    vim.fn.setcharpos("'<", { 0, p1.line, p1.char_index, 0 })
+    vim.fn.setcharpos("'>", { 0, p2.line, p2.char_index, 0 })
 
     local keys_to_select_marks = "gv"
     if vim.fn.visualmode() ~= "v" and vim.fn.visualmode() ~= "" then
@@ -111,11 +111,7 @@ local new_position = function(line, char_index, n_is_pointable)
   ---@param new_n_is_pointable boolean
   p.set_n_is_pointable = function(self, new_n_is_pointable)
     local line_length = utils.line_length(self.line, new_n_is_pointable)
-    if new_n_is_pointable == false and self.char_index == line_length then
-      -- Correct char_index
-      self.char_index = math.max(1, line_length - 1)
-    end
-
+    self.char_index = math.min(self.char_index, line_length)
     self.n_is_pointable = new_n_is_pointable
   end
 
@@ -123,7 +119,7 @@ local new_position = function(line, char_index, n_is_pointable)
     local last_line = vim.api.nvim_buf_line_count(0)
     while true do
       local line_length = utils.line_length(self.line, self.n_is_pointable)
-      local available_places_on_line = (line_length - 1) - self.char_index
+      local available_places_on_line = line_length - self.char_index
 
       if available_places_on_line >= offset then
         self.char_index = self.char_index + offset
@@ -131,11 +127,11 @@ local new_position = function(line, char_index, n_is_pointable)
       end
 
       if self.line == last_line then
-        self.char_index = line_length - 1
+        self.char_index = line_length
         return
       end
 
-      self.char_index = 0
+      self.char_index = 1
       self.line = self.line + 1
       offset = offset - (available_places_on_line + 1)
     end
@@ -143,20 +139,19 @@ local new_position = function(line, char_index, n_is_pointable)
 
   local move_backward = function(self, offset)
     while true do
-      if self.char_index >= offset then
+      if self.char_index > offset then
         self.char_index = self.char_index - offset
         return
       end
 
       if self.line == 1 then
-        self.char_index = 0
+        self.char_index = 1
         return
       end
 
-      offset = offset - (self.char_index + 1)
+      offset = offset - ((self.char_index - 1) + 1)
       self.line = self.line - 1
-      local line_length = utils.line_length(self.line, self.n_is_pointable)
-      self.char_index = line_length - 1
+      self.char_index = utils.line_length(self.line, self.n_is_pointable)
     end
   end
 
@@ -175,7 +170,7 @@ local new_position = function(line, char_index, n_is_pointable)
   return p
 end
 
-local prototype = new_position(0, 0, true)
+local prototype = new_position(1, 1, true)
 
 ---Creates PI_Position from the position of the current cursor.
 ---@param n_is_pointable boolean position can point to a \n
@@ -186,10 +181,15 @@ M.from_cursor = function(n_is_pointable)
   end
 
   local cursor_position = utils.get_cursor()
+  local coordinates = utils.place_in_bounds(
+    cursor_position[1],
+    cursor_position[2],
+    n_is_pointable
+  )
 
   local final_position = vim.deepcopy(prototype)
-  final_position.line = cursor_position[1]
-  final_position.char_index = cursor_position[2]
+  final_position.line = coordinates[1]
+  final_position.char_index = coordinates[2]
   final_position:set_n_is_pointable(n_is_pointable)
 
   return final_position

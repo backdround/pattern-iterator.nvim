@@ -19,7 +19,7 @@ local function get_char_position(expression)
   local position = vim.fn.getcharpos(expression)
   return {
     position[2],
-    position[3] - 1,
+    position[3],
   }
 end
 

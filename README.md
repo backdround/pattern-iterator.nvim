@@ -45,18 +45,14 @@ end
 Add the plugin as a subtree in your git repository:
 ```bash
 git subtree add --squash \
-    --prefix=pattern-iterator.nvim \
+    --prefix=./lua/your-plugin-name/pattern-iterator \
     git@github.com:backdround/pattern-iterator.nvim.git main
-```
-
-Create a symlink from `./lua/your-plugin-name` directory:
-```bash
-ln -s ../../pattern-iterator.nvim/lua/pattern-iterator pattern-iterator
 ```
 
 Use the API from your code:
 ```lua
-local pattern_iterator = require("your-plugin-name.pattern-iterator")
+local pattern_iterator
+  = require("your-plugin-name.pattern-iterator.lua.pattern-iterator")
 ```
 
 ## API
